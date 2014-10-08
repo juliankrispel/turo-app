@@ -2,7 +2,7 @@
   "name": "turo-app",
   "version": "0.0.1",
   "description": "Javascript backend for turo calculator apps",
-  "main": "lib/app/turo-appplication.js",
+  "main": "./lib/app/turo-application.js",
   "directories": {
     "test": "test"
   },
