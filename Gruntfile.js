@@ -1,21 +1,24 @@
+'use strict';
+
+
 module.exports = function(grunt){
+  var conf = require('build-facets')(__dirname)
+            .loadConfiguration('./build-config.js')
+            .loadConfiguration('./build-config-local.js');
+
   grunt.initConfig({
     dist: {
       build: 'build',
-      cordova: {
-        dir: 'cordova',
-        www: 'cordova/www'
-      },
-      icons: {
-        android: 'cordova/platforms/android/res/drawable'
-      }
+      assemble: 'build/assemble',
+      dir: conf.resolve('project-dir', 'dist-relative'),
+      idl: conf.resolve('project-dir', 'idl-dist')
     },
 
     jshint: {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: ['lib/**/*.js', 'test/*.js', '!*.min.js', 'Gruntfile.js', 'idl/*.idl.js']
+      all: ['lib/**/*.js', 'test/*.js', '!*.min.js', '*.js', 'idl/*.idl.js', '!lib/generated/**/*.js', '!*.stub.js']
     },
 
     node_tap: {
@@ -34,9 +37,9 @@ module.exports = function(grunt){
     browserify: {
       dist: {
         files: {
-          // should use '<%=dist.build%>'
+          // should use '<%=dist.assemble%>'
           // the rest of the modules will be lazily discovered.
-          'build/turo.min.js': ['lib/x-tag-components/*.js']
+          'build/assemble/turo.min.js': ['lib/app/turo-application.js']
         }
       },
       options: {
@@ -50,97 +53,65 @@ module.exports = function(grunt){
       },
       main: {
         force: true,
-        src: [ '<%=dist.build%>' ]
-      },
-      cordova: {
-        force: true,
-        src: [ '<%=dist.cordova.www%>' ]
+        src: [ '<%=dist.dir%>', '<%=dist.assemble%>', '<%=dist.build%>' ]
       }
     },
 
     copy: {
       main: {
         files: [
-          { flatten: false, expand: true, cwd: 'resources', src: ['**'], dest: '<%=dist.build%>' },
-          { flatten: true, expand: true, src: ['views/*'], dest: '<%=dist.build%>', filter: 'isFile' },
-          { flatten: true, expand: true, src: ['node_modules/x-tag-core/dist/x-tag-core.js'], dest: '<%=dist.build%>' }
-        ]
-      },
-      cordova: {
-        files: [
-          { expand: true, dot: true, cwd: '<%=dist.build%>', src: [ '**' ], dest: '<%=dist.cordova.www%>' },
-          { expand: true, dot: true, src: [ 'resources/config.xml' ], dest: '<%=dist.cordova.www%>' },
-          // TODO copy splash screen assets to platform specific dirs. The production of these images can't be automated.
-          /*
-            cordova/platforms/ios/:
-              ./Turo/Resources/splash/Default-568h@2x~iphone.png
-              ./Turo/Resources/splash/Default-Landscape@2x~ipad.png
-              ./Turo/Resources/splash/Default-Landscape~ipad.png
-              ./Turo/Resources/splash/Default-Portrait@2x~ipad.png
-              ./Turo/Resources/splash/Default-Portrait~ipad.png
-              ./Turo/Resources/splash/Default@2x~iphone.png
-              ./Turo/Resources/splash/Default~iphone.png
-          */
-          /*
-            cordova/platforms/android/
-              ./res/drawable/splash.9.png
-          */
-          { expand: true, flatten: true, filter: 'isFile', cwd: 'resources/img',
-                  src: 'icon.png',
-                  dest: '<%=dist.icons.android%>' },
+          { expand: true, dot: true, cwd: 'build/assemble', src: [ '**' ], dest: '<%=dist.dir%>' },
+          { flatten: false, expand: true, cwd: 'resources', src: conf.get('resources-common'), dest: '<%=dist.dir%>' },
+          { flatten: false, expand: true, cwd: 'resources', src: conf.get('resources-specific'), dest: '<%=dist.dir%>' }
         ]
       }
     },
 
     watch: {
-      browser: {
+      javascript: {
         files: [
           '<%= jshint.all %>',
-          'lib/**/*.html',
-          'views/*', 'style/*',
-          'node_modules/turo/lib/*', 'Gruntfile.js', 'resources/*'
+          'resources/*'
         ],
-        tasks: ['build-browser']
-      },
-      cordova: {
-        files: ['<%= watch.browser.files %>'],
-        tasks: ['build-cordova']
+        tasks: ['build']
       }
+    },
+
+    shell: {
+      runNative: {
+        command: conf.get('run-command'),
+        options: {
+          execOptions: {
+            cwd: conf.resolve('project-dir')
+          }
+        }
+      },
     },
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  
   grunt.loadNpmTasks('grunt-node-tap');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
-  
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  
+
+  grunt.registerTask('_build-extras', conf.get('extra-build-tasks'));  
 
   grunt.registerTask('_build-common',[
     'jshint', 'node_tap', 'clean:main', 'browserify', 'copy:main'
   ]);
 
   grunt.registerTask('default',[
-    'build-browser', 'watch:browser'
+    '_build-common', 'watch'
   ]);
 
-  grunt.registerTask('build-browser',[
+  grunt.registerTask('run-native',[
+    'shell:runNative'
+  ]);
+
+  grunt.registerTask('build',[
     '_build-common'
-  ]);
-
-  grunt.registerTask('build-cordova', [
-    '_build-common', 'clean:cordova', 'copy:cordova'
-  ]);
-
-  grunt.registerTask('cordova',[
-    'build-cordova', 'watch:cordova'
-  ]);
-
-  grunt.registerTask('server', [
-    'connect:server:keepalive'
   ]);
 
   grunt.registerTask('test',[

@@ -8,9 +8,12 @@
   },
   "scripts": {
     "test": "tap test/test-*.js"
-  }, 
+  },
   "browserify": {
-    "transform": [ "brfs", "overidify" ]
+    "transform": [
+      "brfs",
+      "overidify"
+    ]
   },
   "repository": {
     "type": "git",
@@ -44,6 +47,9 @@
     "brfs": "0.0.8",
     "grunt-manifest": "~0.4.0",
     "grunt-contrib-clean": "~0.5.0",
-    "overidify": "jhugman/overidify"
+    "overidify": "jhugman/overidify",
+    "kirin-build": "~0.1.0",
+    "build-facets": "git://github.com/jhugman/build-facets",
+    "kirin-idl": "git://github.com/jhugman/kirin-idl"
   }
 }
