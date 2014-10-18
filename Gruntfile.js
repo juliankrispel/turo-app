@@ -87,6 +87,19 @@ module.exports = function(grunt){
         }
       },
     },
+    
+    idl: {
+      javascript: {
+        lang: 'javascript', 
+        src: ['idl/*.js'],
+        dest: './lib/generated'
+      },
+      native: {
+        lang: conf.buildVariant.platform,
+        src: ['idl/*.js'],
+        dest: '<%= dist.idl %>'
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -95,11 +108,12 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('kirin-idl');
 
   grunt.registerTask('_build-extras', conf.get('extra-build-tasks'));  
 
   grunt.registerTask('_build-common',[
-    'jshint', 'node_tap', 'clean:main', 'browserify', 'copy:main'
+    'jshint', 'node_tap', 'clean:main', 'browserify', 'copy:main', 'idl', '_build-extras'
   ]);
 
   grunt.registerTask('default',[
