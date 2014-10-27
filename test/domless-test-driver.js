@@ -63,13 +63,35 @@ addKey('backspace', none, none, 'deletePressed');
 addKey('enter', none, none, 'enterPressed');
 
 
+function defineSetters (obj, methodToProp) {
+  _.each(methodToProp, function (i, methodName) {
+    var prop = methodToProp[methodName];
+    obj[methodName] = function (arg) {
+      this[prop] = arg;
+    };
+  });
+  return obj;
+}
+
 function createApplication () {
   // This will suffice for now, however, we should be moving to 
   // $native being run by functions or at least work out a way of allowing js to native property setting in kirin.
   var $keyboard = {},
-      $editorDisplay = {};
-  var EditorDisplayController = require('../lib/app/editor-display-controller'),
-      editorDisplay = new EditorDisplayController($editorDisplay),
+      $editorDisplay = {},
+      $calculator = {};
+
+  defineSetters($keyboard, {
+    displayVariables: 'variables',
+    displayButtonEnablement: 'layout',
+    displayHasUnits: 'hasUnits',
+    displayAnswer: 'answer'
+  });
+
+  defineSetters($editorDisplay, {
+    displayAnswer: 'answer',
+    displayStatement: 'statement',
+  });
+
 
   var CalculatorController = require('../lib/app/calculator-controller'),
       EditorDisplayController = require('../lib/app/editor-display-controller'),
@@ -83,8 +105,8 @@ function createApplication () {
     $keyboard: $keyboard,
     $calculator: $calculator,
   };
-
   
+
   app.calculator_controller.onResume();
   app.editor_display_contoller.isUnderTest = true;
 

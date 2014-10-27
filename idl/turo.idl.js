@@ -47,10 +47,17 @@ module.exports = {
 
       methods: {
         displayButtonEnablement: [{tokenTypeSet: 'object'}],
-        // displayVariables: [{variables: 'TransferableVariablesTable'}],
-        // displayUnits: [{units: 'TransferableUnitsTable'}],
+        displayVariables: [{variables: 'array'}],
         displayHasUnits: [{hasUnits: 'boolean'}],
-        displayAnswer: [{answerString: 'string'}] 
+        displayAnswer: [{answer: 'TransferableAnswer'}] 
+      }
+    },
+
+    'TransferableAnswer': {
+      role: 'request',
+      properties: { 
+        resultToHtml: 'string',
+        resultToString: 'string',
       }
     },
 
