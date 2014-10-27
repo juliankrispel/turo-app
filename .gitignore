@@ -28,3 +28,4 @@ node_modules
 .lock-wscript
 build
 build-config-local.js
+lib/generated/stubs

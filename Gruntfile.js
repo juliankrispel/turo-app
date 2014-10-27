@@ -1,24 +1,23 @@
 'use strict';
 
-
 module.exports = function(grunt){
   var conf = require('build-facets')(__dirname)
-            .loadConfiguration('./build-config.js')
-            .loadConfiguration('./build-config-local.js');
+            .loadConfiguration('./config/build-config.js')
+            .loadConfiguration('./config/build-config-local.js');
 
   grunt.initConfig({
     dist: {
       build: 'build',
       assemble: 'build/assemble',
       dir: conf.resolve('project-dir', 'dist-relative'),
-      idl: conf.resolve('project-dir', 'idl-dist')
+      idl: conf.resolve('project-dir', 'idl-dist'),
     },
 
     jshint: {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: ['lib/**/*.js', 'test/*.js', '!*.min.js', '*.js', 'idl/*.idl.js', '!lib/generated/**/*.js', '!*.stub.js']
+      all: ['*.js', 'lib/**/*.js', 'test/**/*.js', 'idl/**/*.js', 'config/**/*.js', '!*.min.js', '!lib/generated/**/*.js', '!*.stub.js']
     },
 
     node_tap: {
@@ -39,10 +38,12 @@ module.exports = function(grunt){
         files: {
           // should use '<%=dist.assemble%>'
           // the rest of the modules will be lazily discovered.
-          'build/assemble/turo.min.js': ['lib/app/turo-application.js']
-        }
+          'build/assemble/app.min.js': ['lib/app/turo-application.js']
+        },
       },
       options: {
+        require: ['kirin'],
+        alias: conf.get('browserify-aliases'),
         debug: true
       }
     },
@@ -61,6 +62,7 @@ module.exports = function(grunt){
       main: {
         files: [
           { expand: true, dot: true, cwd: 'build/assemble', src: [ '**' ], dest: '<%=dist.dir%>' },
+          { flatten: true, expand: true, cwd: '.', src: 'node_modules/kirin/views/index.html', dest: '<%=dist.dir%>' },
           { flatten: false, expand: true, cwd: 'resources', src: conf.get('resources-common'), dest: '<%=dist.dir%>' },
           { flatten: false, expand: true, cwd: 'resources', src: conf.get('resources-specific'), dest: '<%=dist.dir%>' }
         ]
@@ -113,7 +115,7 @@ module.exports = function(grunt){
   grunt.registerTask('_build-extras', conf.get('extra-build-tasks'));  
 
   grunt.registerTask('_build-common',[
-    'jshint', 'node_tap', 'clean:main', 'browserify', 'copy:main', 'idl', '_build-extras'
+    'jshint', 'node_tap', 'clean:main', 'idl:javascript', 'browserify', 'copy:main', 'idl:native', '_build-extras'
   ]);
 
   grunt.registerTask('default',[

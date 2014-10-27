@@ -1,6 +1,6 @@
 module.exports = {
   'dist-relative': {
-    'android': './app/src/main/assets/www'
+    'android': './app/src/main/assets/generated-javascript'
   },
 
   'idl-dist': {
@@ -13,6 +13,7 @@ module.exports = {
 
   // to be copied into the top level dist directory.
   'resources-common': [
+    'index.android.html'
   ],
 
   'resources-specific': [],
@@ -20,4 +21,9 @@ module.exports = {
   // grunt tasks we call depending on build variant.
   'extra-build-tasks': [],
 
+  'browserify-aliases': {
+    '': [],
+    'web': [],
+    'webview': require('macro-aliasify')(__dirname + '/..')
+  } 
 };
