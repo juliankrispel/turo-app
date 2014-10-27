@@ -71,23 +71,26 @@ function createApplication () {
   var EditorDisplayController = require('../lib/app/editor-display-controller'),
       editorDisplay = new EditorDisplayController($editorDisplay),
 
+  var CalculatorController = require('../lib/app/calculator-controller'),
+      EditorDisplayController = require('../lib/app/editor-display-controller'),
       KeyboardController = require('../lib/app/keyboard-controller');
 
   var app = {
-    editor_display_contoller: editorDisplay,
+    calculator_controller: new CalculatorController($calculator),
+    editor_display_contoller: new EditorDisplayController($editorDisplay),
     keyboard_controller: new KeyboardController($keyboard),
     $editorDisplay: $editorDisplay,
     $keyboard: $keyboard,
+    $calculator: $calculator,
   };
 
-  var statement = applicationObject.calculator.newStatement();
-  applicationObject.editor.commitEdit();
-  applicationObject.editor.beginEditing(statement);
   
-  editorDisplay.isUnderTest = true;
+  app.calculator_controller.onResume();
+  app.editor_display_contoller.isUnderTest = true;
 
   return app;
 }
+
 
 
 
