@@ -46,9 +46,10 @@ module.exports = {
       implementedBy: 'native',
 
       methods: {
-        displayButtonEnablement: [{tokenTypeSet: 'object'}],
+        displayButtonEnablement: [{tokenTypeSet: 'array'}],
         displayVariables: [{variables: 'array'}],
         displayHasUnits: [{hasUnits: 'boolean'}],
+        displayUnits: [{units: 'object'}],
         displayAnswer: [{answer: 'TransferableAnswer'}] 
       }
     },
@@ -75,9 +76,22 @@ module.exports = {
     'TransferableKeypress': {
       role: 'response',
       properties: { 
-        key: 'string',
-        classList: 'array', // of strings
+        type: 'string', // the token type
+        key: 'string', // the key literal
       }  
-    }
+    },
+
+    'Calculator': {
+      implementedBy: 'native',
+      methods: {
+      }
+    },
+
+    'CalculatorController': {
+      implementedBy: 'javascript',
+      alias: 'calculator-controller',
+      methods: {
+      }
+    },
   }
 };
