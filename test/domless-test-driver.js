@@ -84,7 +84,8 @@ function createApplication () {
     displayVariables: 'variables',
     displayButtonEnablement: 'layout',
     displayHasUnits: 'hasUnits',
-    displayAnswer: 'answer'
+    displayAnswer: 'answer',
+    displayUnits: 'units',
   });
 
   defineSetters($editorDisplay, {
