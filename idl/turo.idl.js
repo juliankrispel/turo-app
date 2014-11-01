@@ -16,6 +16,8 @@ module.exports = {
       methods: {
         beginEditingIdentifier: [],
         beginEditingExpression: [],
+        moveCursor:[{position:'int'}],
+        cycleUnitScheme: [],
       }
     },
     
@@ -67,9 +69,9 @@ module.exports = {
       alias: 'keyboard-controller',
       methods: {
         writerPressed: [{t: 'TransferableKeypress'}],
-        clearPressed: [{t: 'TransferableKeypress'}],
-        enterButtonPressed: [{t: 'TransferableKeypress'}],
-        deletePressed: [{t: 'TransferableKeypress'}],
+        clearPressed: [],
+        enterButtonPressed: [],
+        deletePressed: [],
       }
     },
 
