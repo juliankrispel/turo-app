@@ -6,7 +6,6 @@ module.exports = {
       methods: { 
         // only methods allowed
         displayStatement: [{statement: 'TransferableStatement'}], 
-        displayCursorPosition: [{position: 'integer'}]
       }
     },
 
@@ -26,11 +25,14 @@ module.exports = {
       properties: { 
         id: 'string',
         expressionToString: 'string',
+        expressionLength: 'int',
+        expressionIsString: 'boolean',
         autoSuffix: 'string',
         identifierToString: 'string',
         expressionErrorToString: 'string',
         identifierErrorToString: 'string',
         resultToString: 'string',
+        cursorPosition: 'int',
       },
 
       validation: {
