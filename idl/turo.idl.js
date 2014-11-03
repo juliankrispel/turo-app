@@ -53,7 +53,7 @@ module.exports = {
         displayButtonEnablement: [{tokenTypeSet: 'array'}],
         displayVariables: [{variables: 'array'}],
         displayHasUnits: [{hasUnits: 'boolean'}],
-        displayUnits: [{units: 'object'}],
+        displayUnits: [{units: 'TransferableUnitsData'}],
         displayAnswer: [{answer: 'TransferableAnswer'}] 
       }
     },
@@ -63,6 +63,16 @@ module.exports = {
       properties: { 
         resultToHtml: 'string',
         resultToString: 'string',
+      }
+    },
+
+    'TransferableUnitsData': {
+      role: 'request',
+      properties: { 
+        // scheme: { dimension: [unit1, unit2] }
+        units: 'object',
+        schemes: 'array',
+        dimensions: 'array',
       }
     },
 
