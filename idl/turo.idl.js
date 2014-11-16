@@ -92,6 +92,8 @@ module.exports = {
         clearPressed: [],
         enterButtonPressed: [],
         deletePressed: [],
+
+        requestLayoutUnits: [],
       }
     },
 
