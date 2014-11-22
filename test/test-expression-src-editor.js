@@ -97,7 +97,12 @@ function testInserts (t, editor, oldString, token, expectedStrings) {
       newString, obj;
 
   for (var i=0, max = oldString.length; i<=max; i++) {
+
     obj = editor.insert(oldString, i, result, token);
+    if (!obj) {
+      t.ok(obj, 'Failed inserting ' + chip(oldString, i) + ' + ' + token.key);
+    }
+    
     newString = obj.string;
     var msg = 'Insert: ' + chip(oldString, i) + ' -> ' + newString;
     if (expectedStrings[i] !== newString) {

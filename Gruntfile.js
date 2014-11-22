@@ -114,8 +114,12 @@ module.exports = function(grunt){
 
   grunt.registerTask('_build-extras', conf.get('extra-build-tasks'));  
 
+  grunt.registerTask('build-dirty',[
+    'clean:main', 'idl:javascript', 'browserify', 'copy:main', 'idl:native', '_build-extras'
+  ]);
+
   grunt.registerTask('_build-common',[
-    'jshint', 'node_tap', 'clean:main', 'idl:javascript', 'browserify', 'copy:main', 'idl:native', '_build-extras'
+    'jshint', 'node_tap', 'build-dirty'
   ]);
 
   grunt.registerTask('default',[
