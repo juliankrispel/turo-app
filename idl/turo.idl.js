@@ -37,6 +37,7 @@ module.exports = {
         identifierErrorToString: 'string',
         resultToString: 'string',
         cursorPosition: 'int',
+        unitScheme: 'string',
       },
 
       validation: {
@@ -71,6 +72,7 @@ module.exports = {
       properties: { 
         resultToHtml: 'string',
         resultToString: 'string',
+        unitScheme: 'string',
       }
     },
 
