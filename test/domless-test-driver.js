@@ -10,8 +10,8 @@ var KEYS = {},
 // calcKey is the value of the x-turo-button(?) value attribute.
 //   - current implementation inserts value straight into the expression.
 // type is the token type. 'digit', 'prefixOp', 'multOp', 'addOp'
-//   - type this comes, indirectly from token names defined in the parser.
-//   - however this is only a way to stop the user from falling into an error
+//   - type. this comes, indirectly, from token names defined in the parser.
+//   - The ui should be using this type info to stop the user from falling into an error
 //   - recovery nightmare hellhole.
 //   - These tests will not have any such safe guards.
 //   - Current implementation only uses prefixOp, parensOpen, digits, variable.
@@ -137,6 +137,11 @@ var API = {
         return self.state.keyboard_controller[eventName](keyObj);
       }
     });
+    return this;
+  },
+
+  clear: function () {
+    this.state.keyboard_controller.clearPressed();
     return this;
   },
 
