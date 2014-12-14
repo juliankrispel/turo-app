@@ -432,7 +432,7 @@ test('delete quirks', function (t) {
     .testCursor(t)
     .delete()
     // pipe means syntax error.
-    .testExpression(t, '1 kg in|')
+    .testExpression(t, '1 kg in |')
     .type(k.kg)
     .testExpression(t, '1 kg in kg')
     .testCursor(t)
