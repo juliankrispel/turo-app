@@ -21,6 +21,7 @@ module.exports = {
         beginEditingExpression: [],
         moveCursor:[{position:'int'}],
         cycleUnitScheme: [],
+        setEditorColors: [{colors: 'TransferableColors'}],
       }
     },
     
@@ -51,6 +52,14 @@ module.exports = {
       }
     },
     
+    'TransferableColors': {
+      role: 'response',
+      properties: { 
+        autoSuffix: 'string', // the token type
+        errorNodes: 'string', // the key literal
+      }  
+    },
+
     ///////////////////////////////////////////////////////////////
     // The Keyboard.
     ///////////////////////////////////////////////////////////////

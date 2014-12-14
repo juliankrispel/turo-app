@@ -46,6 +46,8 @@ var none,
     exponent = 'exponent',
     openParens = 'openParens',
     point = 'point',
+    unit = 'unit',
+    unitIn = 'unitIn',
     closeParens = 'closeParens';
 
 
@@ -59,6 +61,11 @@ addKey('e', exponent, exponent);
 addKey('(', openParens, openParens);
 addKey(')', closeParens, closeParens);
 addKey('.', point, point);
+addKey('m', unit, 'm');
+addKey('km', unit, 'km');
+addKey('kg', unit, 'kg');
+addKey(' in ', unitIn, 'unitIn');
+addKey('tonne', unit, 'tonne');
 addKey('backspace', none, none, 'deletePressed');
 addKey('enter', none, none, 'enterPressed');
 

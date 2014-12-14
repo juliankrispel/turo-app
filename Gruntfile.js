@@ -17,7 +17,7 @@ module.exports = function(grunt){
       options: {
         jshintrc: '.jshintrc'
       },
-      all: ['*.js', 'lib/**/*.js', 'test/**/*.js', 'idl/**/*.js', 'config/**/*.js', '!*.min.js', '!lib/generated/**/*.js', '!*.stub.js']
+      all: ['*.js', 'lib/**/*.js', 'test/**/*.js', '!test/mocha/*.js', 'idl/**/*.js', 'config/**/*.js', '!*.min.js', '!lib/generated/**/*.js', '!*.stub.js']
     },
 
     node_tap: {

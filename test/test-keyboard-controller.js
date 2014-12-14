@@ -84,6 +84,7 @@ test('Real simple start', function (t) {
 test('Prefix ops', function (t) {
   calc
     .type(k._1, k.plus, k._2, k.sin)
+    // '1+2|' => '1+sin(2|'
     .testExpression(t, '1+sin(2')
     .testCursor(t)
     .moveCursorBy(-1)
@@ -351,6 +352,92 @@ test('delete quirks', function (t) {
     // clear
     .type(k._1)
     .enter();
+
+  calc.type(k._1)
+    .type(k.plus)
+    .type(k.sin)
+    .type(k._2)
+    .testExpression(t, '1+sin(2')
+    .moveCursorBy(-1)
+    .delete()
+    .testExpression(t, '1+sin 2')
+    .moveCursorBy(-1)
+    .delete()
+    .testExpression(t, '1+2')
+    .testCursor(t, 2)
+    .clear();
+
+  calc.type(k.minus)
+    .type(k._1)
+    .testExpression(t, '-1')
+    .moveCursorBy(-1)
+    .delete()
+    .testExpression(t, '1')
+    .clear();
+
+  calc.type(k._1)
+    .type(k._2)
+    .type(k._3)
+    .type(k._4)
+    .type(k.tonne)
+    .testExpression(t, '1234 tonne')
+    .moveCursorBy(-1)
+    .delete()
+    .testExpression(t, '1234')
+    .testCursor(t)
+    .clear();
+
+  calc.type(k._1)
+    .type(k.minus)
+    .type(k.minus)
+    .type(k._2)
+    .testExpression(t, '1--2')
+    .moveCursorBy(-1)
+    .moveCursorBy(+1);
+    
+  calc.delete()
+    // pipe means syntax error.
+    .testExpression(t, '1--|');
+
+  calc.delete()
+    .testExpression(t, '1-|')
+    .clear();
+
+  calc.type(k._1)
+    .type(k.times)
+    .type(k.plus)
+    .type(k.minus)
+    .type(k._2)
+    .testExpression(t, '1*+-2')
+    .moveCursorBy(-1)
+    .moveCursorBy(+1)
+    .delete()
+    // pipe means syntax error.
+    .testExpression(t, '1*+-|')
+    .delete()
+    .testExpression(t, '1*+|')
+    .clear();
+
+
+  calc.type(k._1)
+    .type(k.kg)
+    .testExpression(t, '1 kg')
+    .type(k.unitIn)
+    .testExpression(t, '1 kg in |')
+    .type(k.tonne)
+    .testExpression(t, '1 kg in tonne')
+    .testCursor(t)
+    .moveCursorBy(-1)
+    .moveCursorBy(+1)
+    .testCursor(t)
+    .delete()
+    // pipe means syntax error.
+    .testExpression(t, '1 kg in|')
+    .type(k.kg)
+    .testExpression(t, '1 kg in kg')
+    .testCursor(t)
+    .clear();
+
 
   t.end();
 });
