@@ -445,6 +445,27 @@ test('delete quirks', function (t) {
     .testCursor(t)
     .clear();
 
+  calc.type(k.sin)
+    .type(k._1)
+    .type(k.plus)
+    .type(k._2)
+    .type(k.closeParens)
+    .moveCursorBy(-1)
+    .moveCursorBy(+1)
+    .testExpression(t, 'sin(1+2)')
+    .testCursor(t)
+    .delete()
+    .testExpression(t, 'sin 1+2')
+    .testCursor(t)
+    .delete()
+    .testExpression(t, 'sin 1+|')
+    .delete()
+    .testExpression(t, 'sin 1')
+    .testCursor(t)
+    .delete()
+    .testExpression(t, 'sin |')
+    .clear();
+
 
   t.end();
 });
