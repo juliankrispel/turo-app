@@ -464,8 +464,45 @@ test('delete quirks', function (t) {
     .testCursor(t)
     .delete()
     .testExpression(t, 'sin |')
+    .delete()
+    .testExpression(t, '|')
     .clear();
 
+  calc.type(k.sin, k._1, k.plus, k._2, k.closeParens)
+    .type(k.plus, k._3)
+    .testExpression(t, 'sin(1+2)+3')
+    .testCursor(t)
+    .moveCursorBy(-1)
+    .delete()
+    .testExpression(t, 'sin(1+2)|3')
+    .delete()
+    .testExpression(t, 'sin 1+23')
+    .delete()
+    .testExpression(t, 'sin 1+3')
+    .delete()
+    .testExpression(t, 'sin 13')
+    .delete()
+    .testExpression(t, 'sin 3')
+    .delete()
+    .testExpression(t, '3')
+    .delete()
+    .testExpression(t, '3')
+    .clear();
+
+  // calc.type(k._1)
+  //   .type(k.kg)
+  //   .type(k.tonne)
+  //   .moveCursorBy(-1)
+  //   .moveCursorBy(+1)
+  //   .testExpression(t, '1 kg tonne')
+  //   .testCursor(t)
+  //   .delete()
+  //   .testExpression(t, '1 kg')
+  //   .testCursor(t) // fails here, because cursor is too right
+  //   .delete()
+  //   .testExpression(t, '1')
+  //   .testCursor(t)
+  //   .clear();
 
   t.end();
 });
