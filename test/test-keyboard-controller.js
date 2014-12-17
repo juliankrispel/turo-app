@@ -504,6 +504,35 @@ test('delete quirks', function (t) {
   //   .testCursor(t)
   //   .clear();
 
+  calc.type(k._1, k.unitPer)
+    .testExpression(t, '1/|')
+    .type(k.kg)
+    .testExpression(t, '1/kg')
+    .moveCursorBy(-1)
+    .moveCursorBy(+1)
+    .delete()
+    .testExpression(t, '1/|')
+    .type(k.tonne)
+    .testExpression(t, '1/tonne')
+    .testCursor(t)
+    .type(k.kg)
+    .testExpression(t, '1/tonne kg')
+    .moveCursorBy(-1)
+    .delete()
+    .testExpression(t, '1/tonne')
+    // .testCursor(t)
+    .delete()
+    // .testExpression(t, '1/|')
+    .delete()
+    // .testExpression(t, '1')
+    // .testCursor(t)
+    .clear();
+
+  calc.type(k._1, k.kg)
+    .testExpression(t, '1 kg')
+    .clear();
+
+
   t.end();
 });
 

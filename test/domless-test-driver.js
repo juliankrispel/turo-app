@@ -61,6 +61,8 @@ addKey('e', exponent, exponent);
 addKey('(', openParens, openParens);
 addKey(')', closeParens, closeParens);
 addKey('.', point, point);
+addKey('/', 'unitPer', 'unitPer');
+addKey('^', 'unitPower', 'unitPower');
 addKey('m', unit, 'm');
 addKey('km', unit, 'km');
 addKey('kg', unit, 'kg');
@@ -184,7 +186,7 @@ var API = {
     if (expected < 0) {
       expected = this.expression.length + expected; 
     }
-    t.isEqual(this.cursor, expected, 'cursor: ' + chip(this.expression, this.cursor) + ' = ' + chip(this.expression, expected));
+    t.isEqual(this.cursor, expected, 'Cursor: "' + chip(this.expression, this.cursor) + '" = "' + chip(this.expression, expected) + '"');
     return this;
   },
 
