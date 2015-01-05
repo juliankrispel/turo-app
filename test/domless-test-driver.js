@@ -25,6 +25,11 @@ var addKey = function (calcKey, type, jsKey, event) {
     type: type,
     _testdriver_eventType: event || 'writerPressed'
   };
+  switch (type) {
+    case 'unit': 
+      ret.shortType = 'm';
+      break;
+  }
   KEYS[jsKey || calcKey] = ret;
   return ret;
 };

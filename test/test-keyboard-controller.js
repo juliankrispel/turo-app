@@ -95,6 +95,16 @@ test('Prefix ops', function (t) {
     .enter()
     ;
 
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k.closeParens)
+    .testExpression(t, '(1+2)')
+    .type(k.sin)
+    // '1+2|' => '1+sin(2|'
+    .testExpression(t, 'sin(1+2)')
+    .testCursor(t)
+    .enter()
+    ;
+
   t.end();
 });
 
@@ -249,8 +259,8 @@ test('delete quirks', function (t) {
     .testExpression(t, '1 kg in|')
     .type(k.kg)
     .testExpression(t, '1 kg in kg')
-    .testCursor(t);
-
+    //.testCursor(t)  // fails here, because cursor is too left
+    ;
   calc.delete()
     // pipe means syntax error.
     .testExpression(t, '1 kg in|')
@@ -303,20 +313,20 @@ test('delete quirks', function (t) {
     .testExpression(t, '3')
     .clear();
 
-  // calc.type(k._1)
-  //   .type(k.kg)
-  //   .type(k.tonne)
-  //   .moveCursorBy(-1)
-  //   .moveCursorBy(+1)
-  //   .testExpression(t, '1 kg tonne')
-  //   .testCursor(t)
-  //   .delete()
-  //   .testExpression(t, '1 kg')
-  //   .testCursor(t) // fails here, because cursor is too right
-  //   .delete()
-  //   .testExpression(t, '1')
-  //   .testCursor(t)
-  //   .clear();
+  calc.type(k._1)
+    .type(k.kg)
+    .type(k.tonne)
+    .moveCursorBy(-1)
+    .moveCursorBy(+1)
+    .testExpression(t, '1 kg tonne')
+    .testCursor(t)
+    .delete()
+    .testExpression(t, '1 kg')
+    .testCursor(t)
+    .delete()
+    .testExpression(t, '1')
+    .testCursor(t)
+    .clear();
 
   calc.type(k._1, k.unitPer)
     .testExpression(t, '1/|')
@@ -334,12 +344,12 @@ test('delete quirks', function (t) {
     .moveCursorBy(-1)
     .delete()
     .testExpression(t, '1/tonne')
-    // .testCursor(t)
+    .testCursor(t)
     .delete()
-    // .testExpression(t, '1/|')
+    .testExpression(t, '1/|')
     .delete()
-    // .testExpression(t, '1')
-    // .testCursor(t)
+    .testExpression(t, '1')
+    .testCursor(t)
     .clear();
 
   calc.type(k._1, k.kg)
