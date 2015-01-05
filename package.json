@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "tap test/test-*.js"
+    "test": "istanbul cover ./test/index.js && istanbul report html && open coverage/index.html"
   },
   "browserify": {
     "transform": [
