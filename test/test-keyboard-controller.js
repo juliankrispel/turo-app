@@ -92,21 +92,89 @@ test('Prefix ops', function (t) {
     // I'm not sure what is happening here,
     // but it doesn't bother the html.
     //.testExpression(t, '1+sin|2')
-    .enter()
+    .clear()
     ;
 
   calc
-    .type(k.openParens, k._1, k.plus, k._2, k.closeParens)
-    .testExpression(t, '(1+2)')
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
     .type(k.sin)
-    // '1+2|' => '1+sin(2|'
-    .testExpression(t, 'sin(1+2)')
-    .testCursor(t)
-    .enter()
+    // '(1+23)|' => 'sin(1+23)|'
+    .testExpression(t, 'sin(1+23)')
+    //.testCursor(t)
+    .clear()
     ;
 
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
+    .moveCursor(0)
+    .type(k.sin)
+    // '|(1+23)' => 'sin(1+23)|'
+    .testExpression(t, 'sin(1+23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
+    .moveCursorBy(-1)
+    .type(k.sin)
+    // '(1+23|)' => '(1+sin(23)'
+    .testExpression(t, '(1+sin(23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
+    .moveCursorBy(-2)
+    .type(k.sin)
+    // '(1+2|3)' => '(1+sin(23)'
+    .testExpression(t, '(1+sin(23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
+    .moveCursorBy(-3)
+    .type(k.sin)
+    // '(1+|23)' => '(1+sin(23)'
+    .testExpression(t, '(1+sin(23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
+    .moveCursorBy(-4)
+    .type(k.sin)
+    // '(1|+23)' => '(1+sin(23)'
+    .testExpression(t, '(sin(1+23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+
+  calc
+    .type(k.openParens, k._1, k.plus, k._2, k._3, k.closeParens)
+    .testExpression(t, '(1+23)')
+    .moveCursor(1)
+    .type(k.sin)
+    // '(|1+23)' => '(sin(1+23)'
+    .testExpression(t, '(sin(1+23)')
+    //.testCursor(t)
+    .clear()
+    ;
   t.end();
 });
+
 
 test('Cute hacks', function (t) {
   calc
