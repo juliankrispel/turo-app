@@ -207,6 +207,39 @@ test('Inserting prefix operators', function (t) {
     .clear()
     ;
 
+  calc
+    .type(k._1, k._2, k.kg)
+    .testExpression(t, '12 kg')
+    .moveCursorBy(-1)
+    .type(k.cos)
+    // '12 kg|' => 'cos(12 kg'
+    .testExpression(t, 'cos(12 kg')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k._1, k._2, k.kg, k.unitPower, k._2)
+    .testExpression(t, '12 kg^2')
+    .moveCursorBy(-1)
+    .type(k.cos)
+    // '12 kg|' => 'cos(12 kg'
+    .testExpression(t, 'cos(12 kg^2')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k._1, k._2, k.kg, k.unitPower, k._2)
+    .testExpression(t, '12 kg^2')
+    .moveCursorBy(-1)
+    .type(k.fact)
+    // '12 kg|' => '12! kg^2'
+    .testExpression(t, '12! kg^|2') // TODO: parser bug. postfix operations should have unitNodes.
+    //.testCursor(t)
+    .clear()
+    ;
+
   t.end();
 });
 
