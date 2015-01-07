@@ -81,7 +81,7 @@ test('Real simple start', function (t) {
   t.end();
 });
 
-test('Prefix ops', function (t) {
+test('Inserting prefix operators', function (t) {
   calc
     .type(k._1, k.plus, k._2, k.sin)
     // '1+2|' => '1+sin(2|'
@@ -172,6 +172,145 @@ test('Prefix ops', function (t) {
     //.testCursor(t)
     .clear()
     ;
+
+
+  calc
+    .type(k._1, k.plus, k.sin, k._2, k._3, k.closeParens)
+    .testExpression(t, '1+sin(23)')
+    .moveCursor(2)
+    .type(k.cos)
+    // '1+|sin(23)' => '1+cos(sin(23)'
+    .testExpression(t, '1+cos(sin(23)')
+    //.testCursor(t)
+    .clear()
+    ;    
+
+  calc
+    .type(k._1, k.plus, k.sin, k._2, k._3, k.closeParens)
+    .testExpression(t, '1+sin(23)')
+    .moveCursor(3)
+    .type(k.cos)
+    // '1+s|in(23)' => '1+cos(sin(23)'
+    .testExpression(t, '1+cos(sin(23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k._1, k.plus, k.sin, k._2, k._3, k.closeParens)
+    .testExpression(t, '1+sin(23)')
+    .moveCursor(5)
+    .type(k.cos)
+    // '1+sin|(23)' => '1+sin cos((23)'
+    .testExpression(t, '1+sin cos(23)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  t.end();
+});
+
+
+test('Inserting postfix operators', function (t) {
+  calc
+    .type(k._1, k.plus, k._2, k._3)
+    .testExpression(t, '1+23')
+    .type(k.fact)
+    // '1+23|' => '1+23!'
+    .testExpression(t, '1+23!')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k._1, k.plus, k._2, k._3)
+    .testExpression(t, '1+23')
+    .moveCursorBy(-1)
+    .type(k.fact)
+    // '1+2|3' => '1+23!'
+    .testExpression(t, '1+23!')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k._1, k.plus, k._2, k._3)
+    .testExpression(t, '1+23')
+    .moveCursorBy(-2)
+    .type(k.fact)
+    // '1+|23' => '1+23!'
+    .testExpression(t, '1+23!')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k._2, k.closeParens)
+    .testExpression(t, '(12)')
+    .type(k.fact)
+    // '(12)|' => '(12)!'
+    .testExpression(t, '(12)!')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k._2, k.closeParens)
+    .testExpression(t, '(12)')
+    .moveCursorBy(-1)
+    .type(k.fact)
+    // '(12|)' => '(12!)'
+    .testExpression(t, '(12!)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k._2, k.closeParens)
+    .testExpression(t, '(12)')
+    .moveCursorBy(-2)
+    .type(k.fact)
+    // '(1|2)' => '(12!)'
+    .testExpression(t, '(12!)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+
+  calc
+    .type(k.openParens, k._1, k._2, k.closeParens)
+    .testExpression(t, '(12)')
+    .moveCursorBy(-3)
+    .type(k.fact)
+    // '(|12)' => '(12!)'
+    .testExpression(t, '(12!)')
+    //.testCursor(t)
+    .clear()
+    ;
+
+
+  calc
+    .type(k.openParens, k._1, k._2, k.closeParens)
+    .testExpression(t, '(12)')
+    .moveCursor(0)
+    .type(k.fact)
+    // '|(12)' => '(12!)'
+    .testExpression(t, '(12)!')
+    //.testCursor(t)
+    .clear()
+    ;
+
+  calc
+    .type(k.openParens, k._1, k._2, k.closeParens, k.fact)
+    .testExpression(t, '(12)!')
+    .moveCursorBy(-1)
+    .type(k.sin)
+    // '(12)|!' => 'sin(12)!'
+    .testExpression(t, 'sin(12)!')
+    //.testCursor(t)
+    .clear()
+    ;
+
   t.end();
 });
 
@@ -198,7 +337,7 @@ test('Cute hacks', function (t) {
     .delete()
     .testExpression(t, '|*3') // obviously invalid
     .delete()
-    .testExpression(t, '3') // this won't scale to binary operators of more than one character, but it's a nice fallback.
+    .testExpression(t, '3') // Just delete the first literal token.
     .delete()
     .testExpression(t, '3') // won't do anything because it's valid
     .testCursor(t, 0)

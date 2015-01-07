@@ -47,6 +47,7 @@ var none,
     addOp = 'plusMinus',
     multOp = 'multiplyDivide',
     prefixOp = 'prefixOp',
+    postfixOp = 'postfixOp',
     variable = 'variable',
     exponent = 'exponent',
     openParens = 'openParens',
@@ -62,6 +63,8 @@ addKey('*', multOp, 'times');
 addKey('/', multOp, 'divide');
 addKey('pi', variable);
 addKey('sin(', prefixOp, 'sin');
+addKey('cos(', prefixOp, 'cos');
+addKey('!', postfixOp, 'fact');
 addKey('e', exponent, exponent);
 addKey('(', openParens, openParens);
 addKey(')', closeParens, closeParens);
