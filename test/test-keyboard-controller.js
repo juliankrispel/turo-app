@@ -101,7 +101,7 @@ test('Inserting prefix operators', function (t) {
     .type(k.sin)
     // '(1+23)|' => 'sin(1+23)|'
     .testExpression(t, 'sin(1+23)')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;
 
@@ -112,7 +112,7 @@ test('Inserting prefix operators', function (t) {
     .type(k.sin)
     // '|(1+23)' => 'sin(1+23)|'
     .testExpression(t, 'sin(1+23)')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;
 
@@ -121,9 +121,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '(1+23)')
     .moveCursorBy(-1)
     .type(k.sin)
-    // '(1+23|)' => '(1+sin(23)'
+    // '(1+23|)' => '(1+sin(23|)'
     .testExpression(t, '(1+sin(23)')
-    //.testCursor(t)
+    .testCursor(t, 9)
     .clear()
     ;
 
@@ -133,9 +133,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '(1+23)')
     .moveCursorBy(-2)
     .type(k.sin)
-    // '(1+2|3)' => '(1+sin(23)'
+    // '(1+2|3)' => '(1+sin(23|)'
     .testExpression(t, '(1+sin(23)')
-    //.testCursor(t)
+    .testCursor(t, 9)
     .clear()
     ;
 
@@ -144,9 +144,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '(1+23)')
     .moveCursorBy(-3)
     .type(k.sin)
-    // '(1+|23)' => '(1+sin(23)'
+    // '(1+|23)' => '(1+sin(23|)'
     .testExpression(t, '(1+sin(23)')
-    //.testCursor(t)
+    .testCursor(t, 9)
     .clear()
     ;
 
@@ -155,9 +155,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '(1+23)')
     .moveCursorBy(-4)
     .type(k.sin)
-    // '(1|+23)' => '(1+sin(23)'
+    // '(1|+23)' => '(sin(1|+23)'
     .testExpression(t, '(sin(1+23)')
-    //.testCursor(t)
+    .testCursor(t, 6)
     .clear()
     ;
 
@@ -167,9 +167,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '(1+23)')
     .moveCursor(1)
     .type(k.sin)
-    // '(|1+23)' => '(sin(1+23)'
+    // '(|1+23)' => '(sin(1|+23)'
     .testExpression(t, '(sin(1+23)')
-    //.testCursor(t)
+    .testCursor(t, 6)
     .clear()
     ;
 
@@ -179,9 +179,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '1+sin(23)')
     .moveCursor(2)
     .type(k.cos)
-    // '1+|sin(23)' => '1+cos(sin(23)'
+    // '1+|sin(23)' => '1+cos(sin(23)|'
     .testExpression(t, '1+cos(sin(23)')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;    
 
@@ -190,9 +190,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '1+sin(23)')
     .moveCursor(3)
     .type(k.cos)
-    // '1+s|in(23)' => '1+cos(sin(23)'
+    // '1+s|in(23)' => '1+cos(sin(23)|'
     .testExpression(t, '1+cos(sin(23)')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;
 
@@ -201,9 +201,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '1+sin(23)')
     .moveCursor(5)
     .type(k.cos)
-    // '1+sin|(23)' => '1+sin cos((23)'
+    // '1+sin|(23)' => '1+sin cos(23)|'
     .testExpression(t, '1+sin cos(23)')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;
 
@@ -212,9 +212,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '12 kg')
     .moveCursorBy(-1)
     .type(k.cos)
-    // '12 kg|' => 'cos(12 kg'
+    // '12 kg|' => 'cos(12 kg|'
     .testExpression(t, 'cos(12 kg')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;
 
@@ -223,9 +223,9 @@ test('Inserting prefix operators', function (t) {
     .testExpression(t, '12 kg^2')
     .moveCursorBy(-1)
     .type(k.cos)
-    // '12 kg|' => 'cos(12 kg'
+    // '12 kg|' => 'cos(12 kg^2|'
     .testExpression(t, 'cos(12 kg^2')
-    //.testCursor(t)
+    .testCursor(t)
     .clear()
     ;
 
@@ -235,8 +235,8 @@ test('Inserting prefix operators', function (t) {
     .moveCursorBy(-1)
     .type(k.fact)
     // '12 kg|' => '12! kg^2'
-    .testExpression(t, '12! kg^|2') // TODO: parser bug. postfix operations should have unitNodes.
-    //.testCursor(t)
+    //.testCursor(t, 3)
+    .testExpression(t, '12! kg^2|') // TODO: parser bug. postfix operations should have unitNodes.
     .clear()
     ;
 
@@ -336,7 +336,7 @@ test('Inserting postfix operators', function (t) {
   calc
     .type(k.openParens, k._1, k._2, k.closeParens, k.fact)
     .testExpression(t, '(12)!')
-    .moveCursorBy(-1)
+    .moveCursor(4)
     .type(k.sin)
     // '(12)|!' => 'sin(12)!'
     .testExpression(t, 'sin(12)!')

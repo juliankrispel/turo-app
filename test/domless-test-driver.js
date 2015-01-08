@@ -35,7 +35,7 @@ var addKey = function (calcKey, type, jsKey, event) {
 };
 
 for (var i=0; i<10; i++) {
-  addKey(''+i, 'digit', '_' + i);
+  addKey(''+i, 'digits', '_' + i);
 }
 
 function chip(string, cursorPosition) {
