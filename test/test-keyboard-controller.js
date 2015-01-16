@@ -236,7 +236,7 @@ test('Inserting prefix operators', function (t) {
     .type(k.fact)
     // '12 kg|' => '12! kg^2'
     //.testCursor(t, 3)
-    .testExpression(t, '12! kg^2|') // TODO: parser bug. postfix operations should have unitNodes.
+    .testExpression(t, '12! kg^2') // TODO: parser bug. postfix operations should have unitNodes.
     .clear()
     ;
 
@@ -351,10 +351,10 @@ test('Inserting postfix operators', function (t) {
 test('Cute hacks', function (t) {
   calc
     .type(k._1, k.times, k._2)
-    .testExpression(t, "1*2")
+    .testExpression(t, "1×2")
     .moveCursor(1)
     .delete()
-    .testExpression(t, '|*2') // obviously invalid
+    .testExpression(t, '×2') // obviously invalid
     .delete()
     .testExpression(t, '2') // this won't scale to binary operators of more than one character, but it's a nice fallback.
     .delete()
@@ -365,10 +365,10 @@ test('Cute hacks', function (t) {
 
   calc
     .type(k.pi, k.times, k._3)
-    .testExpression(t, "pi*3")
+    .testExpression(t, "pi×3")
     .moveCursor(2)
     .delete()
-    .testExpression(t, '|*3') // obviously invalid
+    .testExpression(t, '×3') // obviously invalid
     .delete()
     .testExpression(t, '3') // Just delete the first literal token.
     .delete()
@@ -395,9 +395,9 @@ test('appending after enter', function (t) {
     .enter()
     .testExpression(t, '3')
     .type(k.times)
-    .testExpression(t, '3*|')
+    .testExpression(t, '3×')
     .type(k._4)
-    .testExpression(t, '3*4')
+    .testExpression(t, '3×4')
     .enter();
   t.end();
 });
@@ -411,7 +411,7 @@ test('delete quirks', function (t) {
     .testExpression(t, '2')
     .testCursor(t, 1)
     .delete()
-    .testExpression(t, '|')
+    .testExpression(t, '')
     .testCursor(t, 0)
     // clear
     .type(k._1)
@@ -461,10 +461,10 @@ test('delete quirks', function (t) {
     
   calc.delete()
     // pipe means syntax error.
-    .testExpression(t, '1--|');
+    .testExpression(t, '1--');
 
   calc.delete()
-    .testExpression(t, '1-|')
+    .testExpression(t, '1-')
     .clear();
 
   calc.type(k._1)
@@ -472,14 +472,14 @@ test('delete quirks', function (t) {
     .type(k.plus)
     .type(k.minus)
     .type(k._2)
-    .testExpression(t, '1*+-2')
+    .testExpression(t, '1×+-2')
     .moveCursorBy(-1)
     .moveCursorBy(+1)
     .delete()
     // pipe means syntax error.
-    .testExpression(t, '1*+-|')
+    .testExpression(t, '1×+-')
     .delete()
-    .testExpression(t, '1*+|')
+    .testExpression(t, '1×+')
     .clear();
 
 
@@ -487,7 +487,7 @@ test('delete quirks', function (t) {
     .type(k.kg)
     .testExpression(t, '1 kg')
     .type(k.unitIn)
-    .testExpression(t, '1 kg in |')
+    .testExpression(t, '1 kg in ')
     .type(k.tonne)
     .testExpression(t, '1 kg in tonne')
     .testCursor(t)
@@ -496,14 +496,14 @@ test('delete quirks', function (t) {
     .testCursor(t)
     .delete()
     // pipe means syntax error.
-    .testExpression(t, '1 kg in|')
+    .testExpression(t, '1 kg in')
     .type(k.kg)
     .testExpression(t, '1 kg in kg')
     //.testCursor(t)  // fails here, because cursor is too left
     ;
   calc.delete()
     // pipe means syntax error.
-    .testExpression(t, '1 kg in|')
+    .testExpression(t, '1 kg in')
     .delete()
     .testExpression(t, '1 kg')
     .testCursor(t)
@@ -522,14 +522,14 @@ test('delete quirks', function (t) {
     .testExpression(t, 'sin 1+2')
     .testCursor(t)
     .delete()
-    .testExpression(t, 'sin 1+|')
+    .testExpression(t, 'sin 1+')
     .delete()
     .testExpression(t, 'sin 1')
     .testCursor(t)
     .delete()
-    .testExpression(t, 'sin|')
+    .testExpression(t, 'sin')
     .delete()
-    .testExpression(t, '|')
+    .testExpression(t, '')
     .clear();
 
   calc.type(k.sin, k._1, k.plus, k._2, k.closeParens)
@@ -538,7 +538,7 @@ test('delete quirks', function (t) {
     .testCursor(t)
     .moveCursorBy(-1)
     .delete()
-    .testExpression(t, 'sin(1+2)|3')
+    .testExpression(t, 'sin(1+2)3')
     .delete()
     .testExpression(t, 'sin 1+23')
     .delete()
@@ -569,13 +569,13 @@ test('delete quirks', function (t) {
     .clear();
 
   calc.type(k._1, k.unitPer)
-    .testExpression(t, '1/|')
+    .testExpression(t, '1/')
     .type(k.kg)
     .testExpression(t, '1/kg')
     .moveCursorBy(-1)
     .moveCursorBy(+1)
     .delete()
-    .testExpression(t, '1/|')
+    .testExpression(t, '1/')
     .type(k.tonne)
     .testExpression(t, '1/tonne')
     .testCursor(t)
@@ -586,7 +586,7 @@ test('delete quirks', function (t) {
     .testExpression(t, '1/tonne')
     .testCursor(t)
     .delete()
-    .testExpression(t, '1/|')
+    .testExpression(t, '1/')
     .delete()
     .testExpression(t, '1')
     .testCursor(t)
